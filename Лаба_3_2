@@ -1,0 +1,219 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+
+    srand(time(NULL));
+    system("chcp 1251");
+    system("cls");
+// задание 2.1 отождествление вершины
+
+    int top[2]; // вводим вершины
+
+    for(;;) {
+
+        cout << endl << endl << "Выберите 2 вершины: ";
+        cin >> top[0];
+        cin >> top[1];
+
+        if (top[0] > top[1]) {
+            int tmp = top[0];
+            top[0] = top[1];
+            top[1] = tmp;
+        }
+
+        if (top[0] == top[1] || !cin.good()) {
+            cout << "Вы ввели неправильное значение" << endl;
+            cin.clear();
+            cin.ignore(10, '\n');
+            continue;
+        }
+
+        break;
+    }
+    
+    int anti_top[3]; // тут остаются не введеные ввершины
+    
+    for (int i = 0, j = 0; i != 5; i++, j++) {
+        if (i != top[0] && i != top[1]) anti_top[j] = i;
+        else j--;
+    }
+
+    int arr3[4][4]{ 0 }; // результат отождествления 
+
+
+    for (int i = 0; i != 2; i++) {
+        for (int j = 0, x = 0; j != 5; j++, x++) {
+            // результат соединения двух вершин записывается в наименьший из двух вершин
+            if (top[0] == j) continue; 
+            if (top[1] == j && j != 4) j++; // игнорируем 2 вершину т.к. она удаляется
+            if (top[1] == 4 && j == 4) x--;
+
+            if (arr1[top[i]][j]) {
+                arr3[top[0]][x] = 1; // заполняем слияние двух вершин
+                arr3[x][top[0]] = 1; // остальные вершины если пересекались хотя бы с одним из 2 сливаемых вершин
+            }
+        }
+    }
+    arr3[top[0]][top[0]] = 0;
+
+
+    
+    for (int i = 0; i != 3; i++) {
+
+        for (int j = 0, y = 0; j != 3; j++, y++) {
+            // цикл проходит по оставшимся вершинам 
+            if (arr1[anti_top[i]][anti_top[j]]) { 
+                if (anti_top[j] > top[1] && anti_top[i] > top[1]) {
+                    arr3[anti_top[i] - 1][anti_top[j] - 1] = 1;
+                    arr3[anti_top[j] - 1][anti_top[i] - 1] = 1;
+                }
+                else if (anti_top[j] > top[1]) {
+                    arr3[anti_top[i]][anti_top[j] - 1] = 1;
+                    arr3[anti_top[j] - 1][anti_top[i]] = 1;
+                }
+                else if (anti_top[i] > top[1]) {
+                    arr3[anti_top[i] - 1][anti_top[j]] = 1;
+                    arr3[anti_top[j]][anti_top[i] - 1] = 1;
+                }
+                else {
+                    arr3[anti_top[i]][anti_top[j]] = 1;
+                    arr3[anti_top[j]][anti_top[i]] = 1;
+                }
+            }
+        }
+    }
+    // выводим цикл на экран
+
+    for (int i = 0; i != 4; i++) {
+        Print1(arr3[i], 4);
+    }
+
+    // задание 2.2 стягивания  ребра
+
+    int top2[2]; // вводим вершины
+
+    for (;;) {
+
+        cout << endl << endl << "Выберите 2 вершины: ";
+        cin >> top2[0];
+        cin >> top2[1];
+
+        if (top2[0] > top2[1]) {
+            int tmp = top2[0];
+            top2[0] = top2[1];
+            top2[1] = tmp;
+        }
+
+        if (top2[0] == top2[1] || !cin.good()) {
+            cout << "Вы ввели неправильное значение" << endl;
+            cin.clear();
+            cin.ignore(10, '\n');
+            continue;
+        }
+
+        if (!(arr1[top2[0]][top2[1]] && arr1[top2[1]][top2[0]])) {
+            cout << "Данные вершины не образуют ребро" << endl;
+            continue;
+        }
+
+        break;
+    }
+
+
+    int anti_top2[3]; // тут остаются не введеные ввершины
+
+    for (int i = 0, j = 0; i != 5; i++, j++) {
+        if (i != top2[0] && i != top2[1]) anti_top2[j] = i;
+        else j--;
+    }
+
+    int arr4[4][4]{ 0 }; // результат отождествления 
+
+
+    for (int i = 0; i != 2; i++) {
+        for (int j = 0, x = 0; j != 5; j++, x++) {
+            // результат соединения двух вершин записывается в наименьший из двух вершин
+            if (top2[0] == j) continue;
+            if (top2[1] == j && j != 4) j++; // игнорируем 2 вершину т.к. она удаляется
+            if (top2[1] == 4 && j == 4) x--;
+
+            if (arr1[top2[i]][j]) {
+                arr4[top2[0]][x] = 1; // заполняем слияние двух вершин
+                arr4[x][top2[0]] = 1; // остальные вершины если пересекались хотя бы с одним из 2 сливаемых вершин
+            }
+        }
+    }
+    arr4[top2[0]][top2[0]] = 0;
+
+
+
+    for (int i = 0; i != 3; i++) {
+
+        for (int j = 0, y = 0; j != 3; j++, y++) {
+            // цикл проходит по оставшимся вершинам 
+            if (arr1[anti_top2[i]][anti_top2[j]]) {
+                if (anti_top2[j] > top2[1] && anti_top2[i] > top2[1]) {
+                    arr4[anti_top2[i] - 1][anti_top2[j] - 1] = 1;
+                    arr4[anti_top2[j] - 1][anti_top2[i] - 1] = 1;
+                }
+                else if (anti_top2[j] > top2[1]) {
+                    arr4[anti_top2[i]][anti_top2[j] - 1] = 1;
+                    arr4[anti_top2[j] - 1][anti_top2[i]] = 1;
+                }
+                else if (anti_top2[i] > top2[1]) {
+                    arr4[anti_top2[i] - 1][anti_top2[j]] = 1;
+                    arr4[anti_top2[j]][anti_top2[i] - 1] = 1;
+                }
+                else {
+                    arr4[anti_top2[i]][anti_top2[j]] = 1;
+                    arr4[anti_top2[j]][anti_top2[i]] = 1;
+                }
+            }
+        }
+    }
+
+    
+    
+    // задание 2.3 расщепления вершины 
+
+    int arr5[6][6] { 0 }; // новый массив с расщеплением
+
+    int top3;
+
+    for (;;) {
+
+        cout << endl << endl << "Выберите 1 вершину: ";
+        cin >> top3;
+
+        if (top3 > 4 || top3 < 0 || !cin.good()) {
+            cout << "Вы ввели неправильное значение" << endl;
+            cin.clear();
+            cin.ignore(10, '\n');
+            continue;
+        }
+
+        break;
+    }
+
+    for (int i = 0; i != 5; i++) {
+        for (int j = 0; j != 5; j++) {
+
+            if (!i) {
+                arr5[0][j + 1] = arr1[top3][j];
+                arr5[j + 1][0] = arr1[top3][j];
+            }
+
+            if (arr1[i][j]) arr5[i + 1][j + 1] = 1;
+        }
+    }
+
+    arr5[0][top3 + 1] = 1;
+    arr5[top3 + 1][0] = 1;
+
+    cout << endl;
+    for (int i = 0; i != 6; i++) {
+        Print1(arr5[i], 6);
+    }
+    cout << endl;
