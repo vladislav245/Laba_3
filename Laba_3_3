@@ -1,0 +1,124 @@
+
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+int main()
+{
+
+    srand(time(NULL));
+    system("chcp 1251");
+    system("cls");
+    
+// задание 3.1 объединения графов
+
+    int arr6[5][5]{ 0 };
+
+    for (int i = 0; i != 5; i++) {
+        for (int j = 0; j != 5; j++) {
+
+            if(arr1[i][j] || arr2[i][j]) arr6[i][j] = 1;
+        }
+    }
+    
+    cout << endl << "Объединение графов" << endl << endl;
+    for (int i = 0; i != 5; i++) {
+        Print1(arr6[i], 5);
+    }
+    cout << endl;
+
+    // задание 3.2 пересечения графов
+
+    int arr7[5][5]{ 0 };
+
+    for (int i = 0; i != 5; i++) {
+
+        for (int j = i + 1; j != 5; j++) {
+
+            if (arr1[i][j] && arr2[i][j]) {
+                arr7[i][j] = 1;
+                arr7[j][i] = 1;
+            }
+        }
+    }
+
+    cout << endl << "Пересечения графов" << endl << endl;
+    for (int i = 0; i != 5; i++) {
+        Print1(arr7[i], 5);
+    }
+    cout << endl;
+
+    // задание 3.3 кольцевая сумма графов
+
+    stack<int> Stack1;
+    stack<int> Stack2;
+    Stack1.push(0);
+    Stack2.push(0);
+
+    int nodes1[5]{ 0 }; // состояние вершин
+    int nodes2[5]{ 0 }; // состояние вершин
+
+    while (!Stack1.empty() && !Stack2.empty()) {
+
+        int node1 = Stack1.top();
+        int node2 = Stack2.top();
+        Stack1.pop();
+        Stack2.pop();
+
+        if (nodes1[node1] == 2 && nodes2[node2]) continue; // уже были
+
+        nodes1[node1] = 2;
+        nodes2[node2] = 2;
+
+        for (int i = 0; i != 5; i++) {
+
+            if (arr1[node1][i] && nodes1[i] != 2) {
+
+                Stack1.push(i);
+
+                nodes1[i] = 1;
+            }
+
+            if (arr2[node2][i] && nodes2[i] != 2) {
+
+                Stack2.push(i);
+                nodes2[i] = 1;
+            }
+        }
+    }
+
+    int n = 0;
+    for (int i = 0; i != 5; i++) {
+        if (!nodes1[i] || !nodes2[i]) {
+            n++;
+        }
+    }
+
+    if (n > 0) {
+        printf("Один из графов имеет изолированн%s вершин%c \n", n == 1 ? "ую" : "ые", n == 1 ? 'у' : 'ы');
+        cout << "Конец программы" << endl;
+        return 0;
+    }
+
+    int arr8[5][5]{ 0 };
+
+    for (int i = 0; i != 5; i++) {
+
+        for (int j = i + 1; j != 5; j++) {
+
+            if (arr1[i][j] != arr2[i][j]) {
+                arr8[i][j] = 1;
+                arr8[j][i] = 1;
+            }
+        }
+    }
+
+    cout << endl << "Кольцевая сумма графов" << endl << endl;
+    for (int i = 0; i != 5; i++) {
+        Print1(arr8[i], 5);
+    }
+    cout << endl;
+
+    return 0;
+}
